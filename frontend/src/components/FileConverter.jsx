@@ -5,6 +5,20 @@ const MAX_FILES = 10
 const POLL_MS = 1000
 const ACTIVE = ['uploading', 'queued', 'converting']
 
+// 16x16 pixel-art floppy in the classic Office 97 "Save" style.
+const FloppyIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 16 16" shapeRendering="crispEdges" aria-hidden="true">
+    <rect x="1" y="1" width="14" height="14" fill="#000" />
+    <rect x="2" y="2" width="12" height="12" fill="#000080" />
+    <rect x="4" y="2" width="8" height="5" fill="#fff" />
+    <rect x="4" y="6" width="8" height="1" fill="#808080" />
+    <rect x="9" y="3" width="2" height="3" fill="#000080" />
+    <rect x="4" y="9" width="8" height="5" fill="#fff" />
+    <rect x="5" y="10" width="6" height="1" fill="#808080" />
+    <rect x="5" y="12" width="6" height="1" fill="#808080" />
+  </svg>
+)
+
 export default function FileConverter() {
   // row: { file, checked, status, jobId, error }; status is null until the file is sent
   const [rows, setRows] = useState([])
@@ -135,8 +149,9 @@ export default function FileConverter() {
                     aria-label={`Download ${row.file.name}`}
                     title="Download"
                     onClick={() => (window.location.href = downloadUrl(row.jobId))}
+                    className="flex items-center justify-center"
                   >
-                    💾
+                    <FloppyIcon />
                   </button>
                 )}
               </li>
