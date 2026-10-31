@@ -8,10 +8,8 @@ backend/**/__pycache__/
 backend/*.egg-info/
 backend/.venv/
 backend/venv/
-backend/temp/*
-backend/outputs/*
-!backend/temp/.gitkeep
-!backend/outputs/.gitkeep
+backend/storage/
+backend/.pytest_cache/
 
 # Environment
 .env
