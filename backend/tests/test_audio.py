@@ -1,3 +1,6 @@
+import shutil
+import subprocess
+
 import pytest
 from pedalboard.io import AudioFile
 
@@ -15,3 +18,13 @@ def test_to_lofi_slows_down_and_writes_mp3(tone_mp3, tmp_path):
 def test_to_lofi_rejects_too_long(tone_mp3, tmp_path):
     with pytest.raises(TooLongError):
         to_lofi(tone_mp3, tmp_path / "out.mp3", max_seconds=1)
+
+
+@pytest.mark.skipif(not shutil.which("ffmpeg"), reason="M4A decoding needs ffmpeg (installed in the Docker image)")
+def test_to_lofi_reads_m4a(tone_mp3, tmp_path):
+    m4a = tmp_path / "tone.m4a"
+    subprocess.run(["ffmpeg", "-loglevel", "error", "-i", str(tone_mp3), "-c:a", "aac", str(m4a)], check=True)
+    out = tmp_path / "out.mp3"
+    to_lofi(m4a, out, max_seconds=300)
+    with AudioFile(str(out)) as f:
+        assert f.duration == pytest.approx(2 / 0.9, abs=0.2)

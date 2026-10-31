@@ -1,7 +1,7 @@
 FROM python:3.12-slim
 WORKDIR /app
-# Pedalboard's native module links against libatomic, which slim images leave out.
-RUN apt-get update && apt-get install -y --no-install-recommends libatomic1 && rm -rf /var/lib/apt/lists/*
+# libatomic1: Pedalboard's native module needs it. ffmpeg: decodes M4A, which Pedalboard can't read on Linux.
+RUN apt-get update && apt-get install -y --no-install-recommends libatomic1 ffmpeg && rm -rf /var/lib/apt/lists/*
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY app app

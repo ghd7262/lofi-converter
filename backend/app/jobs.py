@@ -40,11 +40,11 @@ def new_id():
     return uuid.uuid4().hex[:12]
 
 
-def create_job(batch_id, file_name, input_size):
+def create_job(batch_id, file_name, input_size, suffix):
     job_id = new_id()
     job_dir = config.STORAGE_DIR / job_id
     job_dir.mkdir(parents=True)
-    job = Job(job_id, batch_id, file_name, input_size, job_dir / "input.mp3", job_dir / "output.mp3")
+    job = Job(job_id, batch_id, file_name, input_size, job_dir / f"input{suffix}", job_dir / "output.mp3")
     jobs[job_id] = job
     return job
 

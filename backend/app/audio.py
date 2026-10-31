@@ -1,3 +1,5 @@
+import subprocess
+
 from pedalboard import Pedalboard, LowpassFilter, Reverb
 from pedalboard.io import AudioFile
 
@@ -14,7 +16,16 @@ class TooLongError(Exception):
     pass
 
 
+def decode_to_wav(path):
+    # Pedalboard can't read M4A/AAC on Linux, so ffmpeg decodes it first.
+    wav = path.with_suffix(".wav")
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(path), "-vn", str(wav)], check=True, timeout=60)
+    return wav
+
+
 def to_lofi(input_path, output_path, max_seconds):
+    if input_path.suffix == ".m4a":
+        input_path = decode_to_wav(input_path)
     with AudioFile(str(input_path)) as f:  # Pedalboard rejects Path objects
         if round(f.duration) > max_seconds:  # MP3 padding makes a 5:00 track read as ~300.03s
             raise TooLongError(f"{f.duration:.0f}s > {max_seconds}s")

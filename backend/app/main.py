@@ -35,14 +35,15 @@ def create_jobs(background_tasks: BackgroundTasks, files: list[UploadFile] = [])
     accepted, rejected, seen = [], [], set()
     for upload in files:
         name = upload.filename or ""
+        suffix = Path(name).suffix.lower()
         if name in seen:
             rejected.append(rejection(name, "duplicate_name", "Same file name already in this batch"))
-        elif not name.lower().endswith(".mp3"):
-            rejected.append(rejection(name, "unsupported_format", "MP3 files only"))
+        elif suffix not in config.ALLOWED_SUFFIXES:
+            rejected.append(rejection(name, "unsupported_format", "MP3 or M4A files only"))
         elif upload.size > config.MAX_FILE_MB * 1024 * 1024:
             rejected.append(rejection(name, "too_large", f"Max {config.MAX_FILE_MB} MB"))
         else:
-            job = create_job(batch_id, name, upload.size)
+            job = create_job(batch_id, name, upload.size, suffix)
             with open(job.input_path, "wb") as out:
                 shutil.copyfileobj(upload.file, out)
             accepted.append(job)

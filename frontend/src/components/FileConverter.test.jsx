@@ -24,7 +24,7 @@ test('dedupes files, converts checked ones, polls until done', async () => {
   const fetch = mockApi()
   const user = userEvent.setup()
   render(<FileConverter />)
-  const input = screen.getByLabelText('Choose MP3 files')
+  const input = screen.getByLabelText('Choose audio files')
 
   await user.upload(input, [mp3('a.mp3'), mp3('b.mp3'), mp3('c.mp3')])
   await user.upload(input, [mp3('a.mp3')])

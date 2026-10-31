@@ -97,15 +97,15 @@ export default function FileConverter() {
             addFiles(e.dataTransfer.files)
           }}
         >
-          <p>{busy ? 'Converting… please wait' : `Drop MP3 files here, or click to browse (max ${MAX_FILES})`}</p>
+          <p>{busy ? 'Converting… please wait' : `Drop MP3 or M4A files here, or click to browse (max ${MAX_FILES})`}</p>
           <input
             ref={inputRef}
             type="file"
-            accept=".mp3,audio/mpeg"
+            accept=".mp3,.m4a,audio/mpeg,audio/mp4"
             multiple
             hidden
             disabled={busy}
-            aria-label="Choose MP3 files"
+            aria-label="Choose audio files"
             onChange={(e) => {
               addFiles(e.target.files)
               e.target.value = '' // allow picking the same file again later

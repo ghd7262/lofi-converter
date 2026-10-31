@@ -12,11 +12,11 @@ def test_batch_accepts_valid_and_rejects_invalid(client, tone_mp3, monkeypatch):
     data = tone_mp3.read_bytes()
     monkeypatch.setattr(config, "MAX_FILE_MB", 1)
     big = ("big.mp3", b"x" * (1024 * 1024 + 1))
-    res = upload(client, ("a.mp3", data), ("a.mp3", data), ("notes.txt", b"hi"), big, ("c.mp3", data))
+    res = upload(client, ("a.mp3", data), ("a.mp3", data), ("notes.txt", b"hi"), big, ("c.M4A", data))
 
     assert res.status_code == 202
     body = res.json()
-    assert [j["file_name"] for j in body["jobs"]] == ["a.mp3", "c.mp3"]
+    assert [j["file_name"] for j in body["jobs"]] == ["a.mp3", "c.M4A"]
     assert {r["file_name"]: r["error"]["code"] for r in body["rejected"]} == {
         "a.mp3": "duplicate_name",
         "notes.txt": "unsupported_format",
